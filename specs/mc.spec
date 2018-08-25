@@ -1,33 +1,33 @@
-%bcond_without	slang
+%bcond_without  slang
 
-Name:               mc
-Epoch:              1
-Version:            4.8.20
-Release:            3%{?dist}
-Summary:            User-friendly text console file manager and visual shell
-License:            GPLv3+
-URL:                https://www.midnight-commander.org/
+Name:                   mc
+Epoch:                  1
+Version:                4.8.20
+Release:                3%{?dist}
+Summary:                User-friendly text console file manager and visual shell
+License:                GPLv3+
+URL:                    https://www.midnight-commander.org/
 
-Source0:            https://www.midnight-commander.org/downloads/mc-%{version}.tar.xz
+Source0:                https://www.midnight-commander.org/downloads/mc-%{version}.tar.xz
 # Signature
-Source900:          https://www.midnight-commander.org/downloads/mc-%{version}.sha256
+Source900:              https://www.midnight-commander.org/downloads/mc-%{version}.sha256
 
 # Downstream-only patch to make mc use /var/tmp for large temporary
 # files.  See also: https://bugzilla.redhat.com/show_bug.cgi?id=895444
-Patch0:             %{name}-tmpdir.patch
-Patch1:             Extends-TMPDIR_DEFAULT-to-mc-wrapper-scripts.patch
+Patch0:                 %{name}-tmpdir.patch
+Patch1:                 Extends-TMPDIR_DEFAULT-to-mc-wrapper-scripts.patch
 
-BuildRequires:      aspell-devel
-BuildRequires:      e2fsprogs-devel
-BuildRequires:      glib2-devel
-BuildRequires:      gpm-devel
+BuildRequires:          aspell-devel
+BuildRequires:          e2fsprogs-devel
+BuildRequires:          glib2-devel
+BuildRequires:          gpm-devel
 %if 0%{?fedora} >= 26 || 0%{?rhel} >= 7
-BuildRequires:      groff-base
+BuildRequires:          groff-base
 %endif
-BuildRequires:      libssh2-devel >= 1.2.5
-BuildRequires:      %{?with_slang:slang-devel}%{!?with_slang:ncurses-devel}
-BuildRequires:      perl-generators
-BuildRequires:      pkgconfig
+BuildRequires:          libssh2-devel >= 1.2.5
+BuildRequires:          %{?with_slang:slang-devel}%{!?with_slang:ncurses-devel}
+BuildRequires:          perl-generators
+BuildRequires:          pkgconfig
 
 %description
 Midnight Commander is a visual shell much like a file manager, only with
@@ -44,23 +44,23 @@ view tar and zip files, and to poke into RPMs for specific files.
 
 %build
 %configure \
-	CFLAGS="%{optflags} -Wno-strict-aliasing" \
-	--disable-rpath \
-	--enable-aspell \
-	--enable-charset \
-	--enable-largefile \
-	--enable-vfs-cpio \
-	--enable-vfs-extfs \
-	--enable-vfs-fish \
-	--enable-vfs-ftp \
-	--enable-vfs-sfs \
-	--enable-vfs-sftp \
-	--enable-vfs-smb \
-	--enable-vfs-tar \
-	--with-x \
-	--with-gpm-mouse \
-	--with-screen=%{?with_slang:slang}%{!?with_slang:ncurses} \
-	%{nil}
+    CFLAGS="%{optflags} -Wno-strict-aliasing" \
+    --disable-rpath \
+    --enable-aspell \
+    --enable-charset \
+    --enable-largefile \
+    --enable-vfs-cpio \
+    --enable-vfs-extfs \
+    --enable-vfs-fish \
+    --enable-vfs-ftp \
+    --enable-vfs-sfs \
+    --enable-vfs-sftp \
+    --enable-vfs-smb \
+    --enable-vfs-tar \
+    --with-x \
+    --with-gpm-mouse \
+    --with-screen=%{?with_slang:slang}%{!?with_slang:ncurses} \
+    %{nil}
 %{make_build}
 
 %install
