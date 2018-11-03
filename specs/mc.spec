@@ -2,7 +2,7 @@
 
 Name:                   mc
 Epoch:                  1
-Version:                4.8.20
+Version:                4.8.21
 Release:                3%{?dist}
 Summary:                User-friendly text console file manager and visual shell
 License:                GPLv3+
@@ -15,19 +15,17 @@ Source900:              https://www.midnight-commander.org/downloads/mc-%{versio
 # Downstream-only patch to make mc use /var/tmp for large temporary
 # files.  See also: https://bugzilla.redhat.com/show_bug.cgi?id=895444
 Patch0:                 %{name}-tmpdir.patch
-Patch1:                 Extends-TMPDIR_DEFAULT-to-mc-wrapper-scripts.patch
 
-BuildRequires:          aspell-devel
-BuildRequires:          e2fsprogs-devel
-BuildRequires:          glib2-devel
-BuildRequires:          gpm-devel
-%if 0%{?fedora} >= 26 || 0%{?rhel} >= 7
-BuildRequires:          groff-base
-%endif
-BuildRequires:          libssh2-devel >= 1.2.5
-BuildRequires:          %{?with_slang:slang-devel}%{!?with_slang:ncurses-devel}
-BuildRequires:          perl-generators
-BuildRequires:          pkgconfig
+BuildRequires:	        aspell-devel
+BuildRequires:	        e2fsprogs-devel
+BuildRequires:          gcc
+BuildRequires:	        glib2-devel
+BuildRequires:	        gpm-devel
+BuildRequires:	        groff-base
+BuildRequires:	        libssh2-devel >= 1.2.5
+BuildRequires:	        %{?with_slang:slang-devel}%{!?with_slang:ncurses-devel}
+BuildRequires:	        perl-generators
+BuildRequires:	        pkgconfig
 
 %description
 Midnight Commander is a visual shell much like a file manager, only with
@@ -40,7 +38,7 @@ view tar and zip files, and to poke into RPMs for specific files.
 # -------------------------------------------------------------------------------------------------------------------- #
 
 %prep
-%autosetup -p0
+%autosetup -p1
 
 %build
 %configure \
@@ -61,12 +59,12 @@ view tar and zip files, and to poke into RPMs for specific files.
     --with-gpm-mouse \
     --with-screen=%{?with_slang:slang}%{!?with_slang:ncurses} \
     %{nil}
-%{make_build}
+%make_build
 
 %install
 install -d %{buildroot}%{_sysconfdir}/profile.d
 
-%{make_install}
+%make_install
 
 install contrib/mc.{sh,csh} %{buildroot}%{_sysconfdir}/profile.d
 
@@ -93,14 +91,23 @@ install contrib/mc.{sh,csh} %{buildroot}%{_sysconfdir}/profile.d
 %{_mandir}/man1/*
 
 %changelog
-* Sat Dec 23 2017 Kitsune Solar <kitsune.solar@gmail.com> - 1:4.8.20-3
-- Build requires groff-base only for RHEL7 and Fedora 26
+* Sat Nov 3 2018 Kitsune Solar <kitsune.solar@gmail.com> - 1:4.8.21-3
+- Rebuilt for EL7.
 
-* Sat Dec 23 2017 Kitsune Solar <kitsune.solar@gmail.com> - 1:4.8.20-2
-- Build requires groff-base only for RHEL7
+* Fri Jul 13 2018 Fedora Release Engineering <releng@fedoraproject.org> - 1:4.8.21-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_29_Mass_Rebuild
 
-* Mon Dec 18 2017 Kitsune Solar <kitsune.solar@gmail.com> - 1:4.8.20-1
-- Build from RHEL7
+* Thu Jun 07 2018 Tomasz Kłoczko <kloczek@fedoraproject.org> - 1:4.8.21-1
+- updated to 4.8.21
+
+* Fri Feb 09 2018 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 1:4.8.20-3
+- Escape macros in %%changelog
+
+* Thu Feb 08 2018 Fedora Release Engineering <releng@fedoraproject.org> - 1:4.8.20-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_28_Mass_Rebuild
+
+* Mon Jan 22 2018 Tomasz Kłoczko <kloczek@fedoraproject.org> - 1:4.8.20-1
+- updated to 4.8.20
 
 * Thu Aug 03 2017 Fedora Release Engineering <releng@fedoraproject.org> - 1:4.8.19-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_27_Binutils_Mass_Rebuild
@@ -619,7 +626,7 @@ install contrib/mc.{sh,csh} %{buildroot}%{_sysconfdir}/profile.d
 * Thu Mar 30 2006 Jindrich Novy <jnovy@redhat.com> 4.6.1a-13
 - comment fallback to use only dd in FISH upload patch
 - drop .promptfix patch so that prompt is displayed only
-  once while in panels
+  once while in panels  
 
 * Tue Mar 28 2006 Jindrich Novy <jnovy@redhat.com> 4.6.1a-12
 - apply more robust version of FISH upload patch,
@@ -667,7 +674,7 @@ install contrib/mc.{sh,csh} %{buildroot}%{_sysconfdir}/profile.d
   main panels
 - correctly diplay characters in mcview for non-UTF-8 LANG set (#174007)
   thanks to Dmitry Butskoy
-
+    
 * Fri Dec 09 2005 Jesse Keating <jkeating@redhat.com>
 - rebuilt
 
@@ -765,7 +772,7 @@ install contrib/mc.{sh,csh} %{buildroot}%{_sysconfdir}/profile.d
 * Wed May 04 2005 Jindrich Novy <jnovy@redhat.com> 4.6.1a-0.9
 - update from CVS
 - sync with .utf8 patch
-- fix broken charset conversion feature in the .utf8 patch,
+- fix broken charset conversion feature in the .utf8 patch, 
   Andrew V. Samoilov (#154516)
 
 * Mon Apr 04 2005 Jindrich Novy <jnovy@redhat.com> 4.6.1a-0.8
@@ -1004,8 +1011,8 @@ install contrib/mc.{sh,csh} %{buildroot}%{_sysconfdir}/profile.d
 
 * Fri Dec  6 2002 Havoc Pennington <hp@redhat.com>
 - 4.6.0-pre1
-- comment out the patches that don't apply,
-  if someone wants to spend time fixing them
+- comment out the patches that don't apply, 
+  if someone wants to spend time fixing them 
   that'd be great
 
 * Mon Dec 02 2002 Elliot Lee <sopwith@redhat.com>
@@ -1198,7 +1205,7 @@ install contrib/mc.{sh,csh} %{buildroot}%{_sysconfdir}/profile.d
   script
 
 * Sat Sep 25 1999 Bill Nottingham <notting@redhat.com>
-- chkconfig --del in %%preun, not %postun
+- chkconfig --del in %%preun, not %%postun
 
 * Wed Sep 22 1999 Michael Fulbright <drmike@redhat.com>
 - updated to 4.5.39-pre9
@@ -1314,16 +1321,13 @@ install contrib/mc.{sh,csh} %{buildroot}%{_sysconfdir}/profile.d
 - Added more documentation files on termcap, terminfo, xterm
 
 * Thu Oct 30 1997 Michael K. Johnson <johnsonm@redhat.com>
-
 - Added dependency on portmap
 
 * Wed Oct 29 1997 Michael K. Johnson <johnsonm@redhat.com>
-
 - fixed spec file.
 - Updated to 4.1.8
 
 * Sun Oct 26 1997 Tomasz Kłoczko <kloczek@rudy.mif.pg.gda.pl>
-
 - updated to 4.1.6
 - added %%attr macros in %%files,
 - a few simplification in %%install,
@@ -1331,27 +1335,22 @@ install contrib/mc.{sh,csh} %{buildroot}%{_sysconfdir}/profile.d
 - fixed installing %%{_sysconfdir}/X11/wmconfig/tkmc.
 
 * Thu Oct 23 1997 Michael K. Johnson <johnsonm@redhat.com>
-
 - updated to 4.1.5
 - added wmconfig
 
 * Wed Oct 15 1997 Erik Troan <ewt@redhat.com>
-
 - chkconfig is for mcserv package, not mc one
 
 * Tue Oct 14 1997 Erik Troan <ewt@redhat.com>
-
 - patched init script for chkconfig
 - don't turn on the service by default
 
 * Fri Oct 10 1997 Michael K. Johnson <johnsonm@redhat.com>
-
 - Converted to new PAM conventions.
 - Updated to 4.1.3
 - No longer needs glibc patch.
 
 * Thu May 22 1997 Michele Marziani <marziani@fe.infn.it>
-
 - added support for mc alias in %%{_sysconfdir}/profile.d/mc.csh (for csh and tcsh)
 - lowered number of SysV init scripts in %%{_sysconfdir}/rc.d/rc[0,1,6].d
   (mcserv needs to be killed before inet)
@@ -1360,14 +1359,12 @@ install contrib/mc.{sh,csh} %{buildroot}%{_sysconfdir}/profile.d
 - minor cleanup of spec file: redundant directives and comments removed
 
 * Sun May 18 1997 Michele Marziani <marziani@fe.infn.it>
-
 - removed all references to non-existent mc.rpmfs
 - added mcedit.1 to the %%files section
 - reverted to un-gzipped man pages (RedHat style)
 - removed double install line for mcserv.pamd
 
 * Tue May 13 1997 Tomasz Kłoczko <kloczek@rudy.mif.pg.gda.pl>
-
 - added new rpmfs script,
 - removed mcfn_install from mc (adding mc() to bash enviroment is in
   %%{_sysconfdir}/profile.d/mc.sh),
@@ -1376,25 +1373,21 @@ install contrib/mc.{sh,csh} %{buildroot}%{_sysconfdir}/profile.d
 - removed %%{prefix}/lib/mc/term.
 
 * Fri May 9 1997 Tomasz Kłoczko <kloczek@rudy.mif.pg.gda.pl>
-
 - changed source url,
 - fixed link mcedit to mc,
 
 * Wed May 7 1997 Tomasz Kłoczko <kloczek@rudy.mif.pg.gda.pl>
-
 - new version 3.5.27,
 - %%dir %%{prefix}/lib/mc/icons and icons removed from tkmc,
 - added commented xmc part.
 
 * Tue Apr 22 1997 Tomasz Kłoczko <kloczek@rudy.mif.pg.gda.pl>
-
 - FIX spec:
    - added URL field,
    - in mc added missing %%{prefix}/lib/mc/mc.ext, %%{prefix}/lib/mc/mc.hint,
      %%{prefix}/lib/mc/mc.hlp, %%{prefix}/lib/mc/mc.lib, %%{prefix}/lib/mc/mc.menu.
 
 * Fri Apr 18 1997 Tomasz Kłoczko <kloczek@rudy.mif.pg.gda.pl>
-
 - added making packages: tkmc, mcserv (xmc not work yet),
 - gziped man pages,
 - added %%{_sysconfdir}/pamd.d/mcserv PAM config file.
